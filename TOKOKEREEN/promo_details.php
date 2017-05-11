@@ -1,3 +1,74 @@
+<?php
+	
+	session_start();
+		if(array_key_exists('blah',$_SESSION) && !empty($_SESSION['blah'])) {
+		    echo ('Set and not empty, and no undefined index error!');
+}
+
+	function connectDB(){
+		$user = "postgres";
+		$pass = "RIZKAHBIEBER22";
+
+		$conn = pg_connect("host=localhost dbname=rizkahshalihah user=postgres password=RIZKAHBIEBER22");
+
+		if (!$conn) {
+			die("Connection failed: " + pg_connection_status());
+		} else {
+			echo "connected";
+		}
+
+		return $conn;
+	}
+
+	function selectAllFromPromo($table){
+		$conn = connectDB();
+
+		$result = "SELECT * FROM kategori_utama";
+
+		if (!$hasil = pg_query($conn, $result)){
+			die("Error: $sql");
+		}
+
+		pg_close($conn);
+		return $hasil;
+	}
+
+	function selectAllFromSub($table){
+		$conn = connectDB();
+		$kodePromo = $_SESSION['kode'];
+		echo $_SESSION['kode'];
+
+		$result = "SELECT nama FROM kategori_utama KU, sub_kategori SK WHERE SK.kode_kategori = '$kodePromo'";
+		echo $result;
+		if (!$hasil = pg_query($conn, $result)){
+			die("Error: $sql");
+		}
+
+		pg_close($conn);
+		return $hasil;	
+	}
+	// function insert_promo(){
+	// 	$conn = connectDB();
+
+	// 	$fullname = $_POST['input_name'];
+	// 	$lama_kirim = $_POST['input_lama'];
+	// 	$tarif = $_POST['input_tarif'];
+	// 	$sql = "INSERT INTO jasa_kirim (nama,lama_kirim,tarif) values ('$fullname', '$lama_kirim', '$tarif')";
+
+	// 	if ($result = pg_query($conn,$sql)){
+	// 		echo "Jasa kirim berhasil dibuat";
+	// 		header("Location: admin.html");
+	// 	} else{
+	// 		die("Error:$sql");
+	// 	}
+
+	// 	mysql_close($conn);
+	// }
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -140,55 +211,56 @@
 			  
     				<h3> Deskripsi Produk : </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-    						<input type="text" class="ccformfield" placeholder="Deskripsi" required>
+    						<input type="text" class="ccformfield" name="input_deskripsi" placeholder="Deskripsi" required>
 					 
     				</div>
     			
-				<h3> Periode Awal :  </h3>
+					<h3> Periode Awal :  </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-        				<input type="date" class="hide-replaced ccformfield" />
+        				<input type="date" class="hide-replaced ccformfield" name="awal" required>
     				</div>
     				
-				<h3> Periode Akhir : </h3>
+					<h3> Periode Akhir : </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-        				<input type="date" class="hide-replaced ccformfield" />
+        				<input type="date" class="hide-replaced ccformfield" name="akhir" required>
     				</div>
 			    
 					
-				<h3> Kode Promo : </h3>
+					<h3> Kode Promo : </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-    						<input class="ccformfield" type="text" placeholder="Kode Promo" required>
+    						<input class="ccformfield" type="text" name="kode" placeholder="Kode Promo" required>
     				</div>	
 					
 				<h3> Kategori : </h3>
-    				<div class="form-row format-date"> <span class="date-display"></span>
-    						<select type="kategori">
-							<option value="" disabled selected>Kategori</option>
-		   					<option value="">Pakaian Wanita</option>
-			 				<option value="">Pakaian Muslim</option>
-			 				<option value="">Pakaian Laki-Laki</option>
-							</select required>
-    				</div>	
+					<div class="form-row format-date"> <span class="date-display"></span>
+					<select name="promo" id="promo" placeholder="Kategori" onchange=showSubCategory(this.value)>
+					<?php
+						$res = selectAllFromPromo("kategori_utama");
+						
+							while (($row = pg_fetch_row($res)))
+							{
+							    echo "<option>".$row[1]."</option>";
+							}
+						
+						?>
+					</select>
+				</div>
+
 				<h3> Sub Kategori : </h3>
-						<select type="sub_kategori">
-						<option value="" disabled selected>Sub Kategori</option>
-	   					<option value="">Pakaian Muslim Anak-Anak</option>
-		 				<option value="">Pakaian Muslim Wanita</option>
-		 				<option value="">Pakaian Muslim Laki-Laki</option>
-						</select required>
-    						<br>
-							<br>
-							<br>
-							
-			    <div class="ccfield-prepend">
-			        <input class="ccbtn" type="submit" value="Submit">
+					<div class="form-row format-date"> <span class="date-display"></span>
+					<select name="promo" id="sub">
+						
+					</select>
+					</div>
+
+				<div class="ccfield-prepend">
+			    	<input type="submit" class="ccbtn" value="Submit"/>
 			    </div>
 			    </form>
 			</div>		
 			
-			<br>
-			<br>
-			<br>
+		
+		
 	<footer id="footer"><!--Footer-->
 		<div class="footer-top">
 			<div class="container">
@@ -248,5 +320,24 @@
 	<script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
+
+    <script>
+		function showSubCategory(str) {
+  	
+  	if (window.XMLHttpRequest) {
+    	// code for IE7+, Firefox, Chrome, Opera, Safari
+    	xmlhttp=new XMLHttpRequest();
+  	} else { // code for IE6, IE5
+    	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+  		xmlhttp.onreadystatechange=function() {
+    if (this.readyState==4 && this.status==200) {
+    	document.getElementById("sub").innerHTML=this.responseText;
+    }
+  	}
+		xmlhttp.open("GET","getSubKategori.php?q="+str,true);
+		xmlhttp.send();
+	}
+	</script>
 </body>
 </html>
