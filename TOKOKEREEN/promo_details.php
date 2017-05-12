@@ -255,24 +255,24 @@
 			  
     				<h3> Deskripsi Promo : </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-    						<input type="text" class="ccformfield" name="input_deskripsi" placeholder="Deskripsi" title="Lengkapi deskripsi produk" required>
+    						<input type="text" class="ccformfield" name="input_deskripsi" placeholder="Deskripsi" required="" oninvalid="this.setCustomValidity('Harap masukkan deskripsi promo')"></input>
 					 
     				</div>
     			
 					<h3> Periode Awal :  </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-        				<input type="date" class="hide-replaced ccformfield" name="awal" title="Masukkan periode awal" required>
+        				<input type="date" class="hide-replaced ccformfield" name="awal" required="" oninvalid="this.setCustomValidity('Harap masukkan periode awal promo')"></input>
     				</div>
     				
 					<h3> Periode Akhir : </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-        				<input type="date" class="hide-replaced ccformfield" name="akhir" title="Masukkan periode akhir" required>
+        				<input type="date" class="hide-replaced ccformfield" name="akhir" required="" oninvalid="this.setCustomValidity('Harap masukkan periode akhir promo')"></input>
     				</div>
 			    
 					
 					<h3> Kode Promo : </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-    						<input class="ccformfield" type="text" name="kode" placeholder="Kode Promo" title="Masukkan kode promo" required>
+    						<input class="ccformfield" type="text" name="kode" placeholder="Kode Promo" required="" oninvalid="this.setCustomValidity('Harap masukkan kode promo')">
     				</div>	
 					
 				<h3> Kategori : </h3>

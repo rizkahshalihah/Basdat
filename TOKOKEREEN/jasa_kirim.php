@@ -29,11 +29,15 @@
 		if ($result = pg_query($conn,$sql)){
 			echo "Jasa kirim berhasil dibuat";
 			$_SESSION['status'] = "true";
-
-			header("Location: admin.html");
+			echo ("<SCRIPT LANGUAGE='JavaScript'>
+		    window.alert('Jasa Kirim berhasil dibuat')
+		    window.location.href='admin.html';
+		    </SCRIPT>");
+			//header("Location: admin.html");
 		} else{
 			$_SESSION['status'] = "false";
 			header("Location: jasa_kirim.php");
+
 		}
 
 		pg_close($conn);
@@ -191,17 +195,17 @@
 		</header>
 				
 			    <form method="post" action="jasa_kirim.php" class="ccform">
-			    	<h3> Full Name : </h3>
+			    	<h3> Nama Jasa Kirim : </h3>
 				    <div class="ccfield-prepend">
-						<input class="ccformfield" type="text" id= "input_name" name="input_name" placeholder="Full Name" title="Masukkan Nama Anda" required >
+						<input class="ccformfield" type="text" id= "input_name" name="input_name" placeholder="Nama Jasa Kirim" required="" oninvalid="this.setCustomValidity('Harap masukkan jenis jasa kirim')"></input>
 						</div>
 					<h3> Lama Kirim : </h3>
 				<div class="ccfield-prepend">
-						<input class="ccformfield" type="number" id="input_lama" name="input_lama" min="1" placeholder="Contoh: 1-2 hari" title="Masukkan lama kirim" required>
+						<input class="ccformfield" type="text" id="input_lama" name="input_lama" min="1" placeholder="Contoh: 1/1-2 hari" required="" oninvalid="this.setCustomValidity('Harap masukkan lama pengiriman')"></input>
 			    </div>
 			    <h3> Tarif : </h3>
 			   	<div class="ccfield-prepend">
-				       <input class="ccformfield" type="number" id="input_tarif" name="input_tarif" min="1" title="Masukkan tarif dengan benar" placeholder="Tarif" required>
+				       <input class="ccformfield" type="number" id="input_tarif" name="input_tarif" min="1" placeholder="Tarif" required="" oninvalid="this.setCustomValidity('Harap masukkan tarif pengiriman')">
 				</div>
 				<br>
 				<div class="ccfield-prepend">
