@@ -34,7 +34,19 @@
 		$query = "SELECT * FROM PROMO";
 		$num_data = pg_num_rows(pg_query($query))+1;
 		
-		$new_id = "R0000".$num_data."";
+		
+
+		if ($num_data > 9999){
+			$new_id = "R".$num_data."";
+		} else if ($num_data > 999){
+			$new_id = "R0".$num_data."";
+		} else if ($num_data > 99){
+			$new_id = "R00".$num_data."";
+		} else if ($num_data > 9){
+			$new_id = "R000".$num_data."";
+		} else {
+			$new_id = "R0000".$num_data."";	
+		}
 		
 		return $new_id;
 	}
@@ -241,7 +253,7 @@
 			<div class="wrapper">
 			    <form method="post" action="promo_details.php" class="ccform">
 			  
-    				<h3> Deskripsi Produk : </h3>
+    				<h3> Deskripsi Promo : </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
     						<input type="text" class="ccformfield" name="input_deskripsi" placeholder="Deskripsi" title="Lengkapi deskripsi produk" required>
 					 

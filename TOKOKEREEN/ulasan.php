@@ -20,36 +20,6 @@
 
 		return $conn;
 	}
-	// function test_query(){
-	// 	$conn = connectDB();
-	// 	$query = "SELECT * FROM PENGGUNA";
-	// 	$result = pg_query($conn,$query);
-	// 	//Handle Error
-
-	// 	while($hasil=pg_fetch_assoc($result)){
-	// 		echo "<p>".$hasil['nama']."</p>";
-	// 	}
-	// }
-
-
-	// test_query();
-
-	// function validation_tarif(){
-	// 	$temp = "";
-	// 	$msg = "";
-	// 	$rst = "";
-
-	// 		if (isset($_POST["submit"])) {  
-	// 		$number = $_POST["input_tarif"];
-
-	// 		if(empty($number)) {
-	// 		    $msg = '<span class="error"> Please enter a value</span>';
-	// 		} else if(!is_numeric($number)) {
-	// 		    $msg = '<span class="error"> Data entered was not numeric</span>';
-	// 		} 
-	// 	}
-	// }
-
 
 	function buat_ulasan(){
 		$conn = connectDB();
@@ -67,14 +37,6 @@
 		}
 
 		mysql_close($conn);
-	}
-
-	if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-		if ($_POST['command'] === 'insert'){
-			insert_jasaKirim();
-		} else if ($_POST['command'] === 'input_tarif'){
-			validation_tarif();
-		}
 	}
 
 ?>
