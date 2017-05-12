@@ -1,66 +1,42 @@
 <?php
-
+	
+	session_start();
+	if (isset($_SESSION['status']) && $_SESSION['status'] == 'false'){
+			echo "<script> alert('Namanya udah ada');</script>";
+			unset($_SESSION['status']);
+		} 
 	function connectDB(){
 		$user = "postgres";
 		$pass = "RIZKAHBIEBER22";
 
 		$conn = pg_connect("host=localhost dbname=rizkahshalihah user=postgres password=RIZKAHBIEBER22");
 
-		if (!$conn) {
-			die("Connection failed: " + pg_connection_status());
-		} else {
-			echo "connected";
-		}
-
+		
 		return $conn;
+
 	}
-	// function test_query(){
-	// 	$conn = connectDB();
-	// 	$query = "SELECT * FROM PENGGUNA";
-	// 	$result = pg_query($conn,$query);
-	// 	//Handle Error
-
-	// 	while($hasil=pg_fetch_assoc($result)){
-	// 		echo "<p>".$hasil['nama']."</p>";
-	// 	}
-	// }
-
-
-	// test_query();
-
-	// function validation_tarif(){
-	// 	$temp = "";
-	// 	$msg = "";
-	// 	$rst = "";
-
-	// 		if (isset($_POST["submit"])) {  
-	// 		$number = $_POST["input_tarif"];
-
-	// 		if(empty($number)) {
-	// 		    $msg = '<span class="error"> Please enter a value</span>';
-	// 		} else if(!is_numeric($number)) {
-	// 		    $msg = '<span class="error"> Data entered was not numeric</span>';
-	// 		} 
-	// 	}
-	// }
-
 
 	function insert_jasaKirim(){
 		$conn = connectDB();
 
 		$fullname = $_POST['input_name'];
+
+
 		$lama_kirim = $_POST['input_lama'];
 		$tarif = $_POST['input_tarif'];
 		$sql = "INSERT INTO jasa_kirim (nama,lama_kirim,tarif) values ('$fullname', '$lama_kirim', '$tarif')";
 
 		if ($result = pg_query($conn,$sql)){
 			echo "Jasa kirim berhasil dibuat";
+			$_SESSION['status'] = "true";
+
 			header("Location: admin.html");
 		} else{
-			die("Error:$sql");
+			$_SESSION['status'] = "false";
+			header("Location: jasa_kirim.php");
 		}
 
-		mysql_close($conn);
+		pg_close($conn);
 	}
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -188,7 +164,7 @@
                                     <ul role="menu" class="sub-menu">
                                         <li><a href="Kategori.html">Buat Kategori & Sub</a></li>
 										<li><a href="product_details.html">Buat Jasa Kirim</a></li>
-										<li><a href="promo_details.html">Buat Promo Produk</a></li>
+										<li><a href="promo_details.php">Buat Promo Produk</a></li>
 										<li><a href="admin_tambahproduk.html">Tambahkan Produk</a></li> 
 										<li><a href="index.html">Logout</a></li> 
                                     </ul>
@@ -214,18 +190,18 @@
     		<h1>Form Jasa Kirim</h1>
 		</header>
 				
-			    <form method="post" action="product_details.php" class="ccform">
+			    <form method="post" action="jasa_kirim.php" class="ccform">
 			    	<h3> Full Name : </h3>
 				    <div class="ccfield-prepend">
-						<input class="ccformfield" type="text" id= "input_name" name="input_name" placeholder="Full Name" required>
+						<input class="ccformfield" type="text" id= "input_name" name="input_name" placeholder="Full Name" title="Masukkan Nama Anda" required >
 						</div>
 					<h3> Lama Kirim : </h3>
 				<div class="ccfield-prepend">
-						<input class="ccformfield" type="text" id="input_lama" name="input_lama" placeholder="Lama Kirim" required>
+						<input class="ccformfield" type="number" id="input_lama" name="input_lama" min="1" placeholder="Contoh: 1-2 hari" tittle="Masukkan lama kirim" required>
 			    </div>
 			    <h3> Tarif : </h3>
 			   	<div class="ccfield-prepend">
-				       <input class="ccformfield" type="text" id="input_tarif" name="input_tarif" placeholder="Tarif" required>
+				       <input class="ccformfield" type="number" id="input_tarif" name="input_tarif" pattern="^0*[1-9]\d*$" Masukkan="Masukkan tarif dengan benar" placeholder="Tarif" required>
 				</div>
 				<br>
 				<div class="ccfield-prepend">

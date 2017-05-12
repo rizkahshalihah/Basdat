@@ -1,10 +1,5 @@
 <?php
-	
 	session_start();
-		if(array_key_exists('blah',$_SESSION) && !empty($_SESSION['blah'])) {
-		    echo ('Set and not empty, and no undefined index error!');
-}
-
 	function connectDB(){
 		$user = "postgres";
 		$pass = "RIZKAHBIEBER22";
@@ -33,37 +28,70 @@
 		return $hasil;
 	}
 
-	function selectAllFromSub($table){
-		$conn = connectDB();
-		$kodePromo = $_SESSION['kode'];
-		echo $_SESSION['kode'];
 
-		$result = "SELECT nama FROM kategori_utama KU, sub_kategori SK WHERE SK.kode_kategori = '$kodePromo'";
-		echo $result;
-		if (!$hasil = pg_query($conn, $result)){
-			die("Error: $sql");
+	function generate_id(){
+		$conn = connectDB();
+		$query = "SELECT * FROM PROMO";
+		$num_data = pg_num_rows(pg_query($query))+1;
+		
+		$new_id = "R0000".$num_data."";
+		
+		return $new_id;
+	}
+
+	function insert_promo(){
+		$conn = connectDB();
+
+		$id = generate_id();
+		$deskripsi = $_POST['input_deskripsi'];
+		$periode_awal = $_POST['awal'];
+		$periode_akhir = $_POST['akhir'];
+		$kode_promo = $_POST['kode'];
+		$kategori = $_POST['promo'];
+		$sub_kategori = $_POST['promoSub'];
+
+		$sql = "INSERT INTO promo (id,deskripsi,periode_awal,periode_akhir,kode) values ('$id', '$deskripsi', '$periode_awal', '$periode_akhir', '$kode_promo')";
+
+		if ($result = pg_query($conn,$sql)){
+			insert_promo_produk($id);
+		} else{
+			die("Error:$sql");
 		}
 
-		pg_close($conn);
-		return $hasil;	
+		mysql_close($conn);
 	}
-	// function insert_promo(){
-	// 	$conn = connectDB();
 
-	// 	$fullname = $_POST['input_name'];
-	// 	$lama_kirim = $_POST['input_lama'];
-	// 	$tarif = $_POST['input_tarif'];
-	// 	$sql = "INSERT INTO jasa_kirim (nama,lama_kirim,tarif) values ('$fullname', '$lama_kirim', '$tarif')";
+	function insert_promo_produk($id){
+		$conn = connectDB();
 
-	// 	if ($result = pg_query($conn,$sql)){
-	// 		echo "Jasa kirim berhasil dibuat";
-	// 		header("Location: admin.html");
-	// 	} else{
-	// 		die("Error:$sql");
-	// 	}
+		$hasil = $_POST['promoSub'];
 
-	// 	mysql_close($conn);
-	// }
+		$sql = "SELECT kode_produk FROM SHIPPED_PRODUK S, SUB_KATEGORI SK WHERE SK.kode = S.kategori AND SK.nama = '".$hasil."'";
+		$exec = pg_query($sql);
+		if(!$exec){
+			die('Errror Cuk!');
+		}else{	
+			while($row = pg_fetch_assoc($exec)){
+				$query = "INSERT INTO promo_produk (id_promo,kode_produk) values ('".$id."', '".$row['kode_produk']."')";
+				$masukin = pg_query($query);
+				if ($masukin){
+					header("Location: admin.html");
+				} else{
+					die("Error:$sql");
+				}
+			}	
+		}
+
+		
+
+		mysql_close($conn);
+
+	}
+
+	if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+		insert_promo();
+		
+	}
 
 ?>
 
@@ -182,7 +210,7 @@
 								<li class="dropdown"><a href="#">Produk<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
                                         <li><a href="Kategori.html">Buat Kategori & Sub</a></li>
-										<li><a href="product_details.html">Buat Jasa Kirim</a></li>
+										<li><a href="jasa_kirim.php">Buat Jasa Kirim</a></li>
 										<li><a href="promo_details.html">Buat Promo Produk</a></li>
 										<li><a href="admin_tambahproduk.html">Tambahkan Produk</a></li> 
 										<li><a href="index.html">Logout</a></li> 
@@ -207,33 +235,34 @@
     		<h1>Form Membuat Promo</h1>	
 		</header>
 			<div class="wrapper">
-			    <form method="post" action="" class="ccform">
+			    <form method="post" action="promo_details.php" class="ccform">
 			  
     				<h3> Deskripsi Produk : </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-    						<input type="text" class="ccformfield" name="input_deskripsi" placeholder="Deskripsi" required>
+    						<input type="text" class="ccformfield" name="input_deskripsi" placeholder="Deskripsi" title="Lengkapi deskripsi produk" required>
 					 
     				</div>
     			
 					<h3> Periode Awal :  </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-        				<input type="date" class="hide-replaced ccformfield" name="awal" required>
+        				<input type="date" class="hide-replaced ccformfield" name="awal" title="Masukkan periode awal" required>
     				</div>
     				
 					<h3> Periode Akhir : </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-        				<input type="date" class="hide-replaced ccformfield" name="akhir" required>
+        				<input type="date" class="hide-replaced ccformfield" name="akhir" title="Masukkan periode akhir" required>
     				</div>
 			    
 					
 					<h3> Kode Promo : </h3>
     				<div class="form-row format-date"> <span class="date-display"></span>
-    						<input class="ccformfield" type="text" name="kode" placeholder="Kode Promo" required>
+    						<input class="ccformfield" type="text" name="kode" placeholder="Kode Promo" title="Masukkan kode promo" required>
     				</div>	
 					
 				<h3> Kategori : </h3>
 					<div class="form-row format-date"> <span class="date-display"></span>
-					<select name="promo" id="promo" placeholder="Kategori" onchange=showSubCategory(this.value)>
+					<select name="promo" id="promo" placeholder="Kategori" onchange=showSubCategory(this.value) required>
+					<option selected disabled>Kategori</option>
 					<?php
 						$res = selectAllFromPromo("kategori_utama");
 						
@@ -248,13 +277,17 @@
 
 				<h3> Sub Kategori : </h3>
 					<div class="form-row format-date"> <span class="date-display"></span>
-					<select name="promo" id="sub">
-						
+					<select name="promoSub" id="sub" required>
+					<option selected disabled>Sub Kategori</option>	
 					</select>
 					</div>
 
+					<br>
+					<br>
+
 				<div class="ccfield-prepend">
-			    	<input type="submit" class="ccbtn" value="Submit"/>
+					<input type="hidden" id="insert_promo" name="command" value="insert">
+ 					<button type="submit" class="ccbtn">Submit</button>
 			    </div>
 			    </form>
 			</div>		
