@@ -2,7 +2,7 @@
 	
 	session_start();
 	if (isset($_SESSION['status']) && $_SESSION['status'] == 'false'){
-			echo "<script> alert('Namanya udah ada');</script>";
+			echo "<script> alert('Jasa kirim yang dimasukkan sudah terdaftar');</script>";
 			unset($_SESSION['status']);
 		} 
 	function connectDB(){
@@ -197,11 +197,11 @@
 						</div>
 					<h3> Lama Kirim : </h3>
 				<div class="ccfield-prepend">
-						<input class="ccformfield" type="number" id="input_lama" name="input_lama" min="1" placeholder="Contoh: 1-2 hari" tittle="Masukkan lama kirim" required>
+						<input class="ccformfield" type="number" id="input_lama" name="input_lama" min="1" placeholder="Contoh: 1-2 hari" title="Masukkan lama kirim" required>
 			    </div>
 			    <h3> Tarif : </h3>
 			   	<div class="ccfield-prepend">
-				       <input class="ccformfield" type="number" id="input_tarif" name="input_tarif" pattern="^0*[1-9]\d*$" Masukkan="Masukkan tarif dengan benar" placeholder="Tarif" required>
+				       <input class="ccformfield" type="number" id="input_tarif" name="input_tarif" min="1" title="Masukkan tarif dengan benar" placeholder="Tarif" required>
 				</div>
 				<br>
 				<div class="ccfield-prepend">

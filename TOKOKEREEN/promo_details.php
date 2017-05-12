@@ -9,7 +9,7 @@
 		if (!$conn) {
 			die("Connection failed: " + pg_connection_status());
 		} else {
-			echo "connected";
+			echo "";
 		}
 
 		return $conn;
@@ -50,15 +50,19 @@
 		$kategori = $_POST['promo'];
 		$sub_kategori = $_POST['promoSub'];
 
-		$sql = "INSERT INTO promo (id,deskripsi,periode_awal,periode_akhir,kode) values ('$id', '$deskripsi', '$periode_awal', '$periode_akhir', '$kode_promo')";
+		if ($periode_awal > $periode_akhir){
+			echo "<script> alert('Periode akhir harus lebih besar daripada periode awal');</script>";
+		} else {
+			$sql = "INSERT INTO promo (id,deskripsi,periode_awal,periode_akhir,kode) values ('$id', '$deskripsi', '$periode_awal', '$periode_akhir', '$kode_promo')";
 
-		if ($result = pg_query($conn,$sql)){
-			insert_promo_produk($id);
-		} else{
-			die("Error:$sql");
-		}
+			if ($result = pg_query($conn,$sql)){
+				insert_promo_produk($id);
+			} else{
+				die("Error:$sql");
+			}
 
-		mysql_close($conn);
+			pg_close($conn);	
+		}	
 	}
 
 	function insert_promo_produk($id){
@@ -84,7 +88,7 @@
 
 		
 
-		mysql_close($conn);
+		pg_close($conn);
 
 	}
 
@@ -261,8 +265,8 @@
 					
 				<h3> Kategori : </h3>
 					<div class="form-row format-date"> <span class="date-display"></span>
-					<select name="promo" id="promo" placeholder="Kategori" onchange=showSubCategory(this.value) required>
-					<option selected disabled>Kategori</option>
+					<select name="promo" id="promo" placeholder="Kategori" onchange='showSubCategory(this.value)' required>
+					<option disable selected value>Kategori</option>
 					<?php
 						$res = selectAllFromPromo("kategori_utama");
 						
@@ -278,7 +282,7 @@
 				<h3> Sub Kategori : </h3>
 					<div class="form-row format-date"> <span class="date-display"></span>
 					<select name="promoSub" id="sub" required>
-					<option selected disabled>Sub Kategori</option>	
+					<option disable selected value>Sub Kategori</option>	
 					</select>
 					</div>
 
