@@ -1,20 +1,13 @@
 <?php
 	
 	session_start();
+	include 'navigasi.php';
+	include 'connect.php';
 	if (isset($_SESSION['status']) && $_SESSION['status'] == 'false'){
 			echo "<script> alert('Jasa kirim yang dimasukkan sudah terdaftar');</script>";
 			unset($_SESSION['status']);
 		} 
-	function connectDB(){
-		$user = "postgres";
-		$pass = "RIZKAHBIEBER22";
-
-		$conn = pg_connect("host=localhost dbname=rizkahshalihah user=postgres password=RIZKAHBIEBER22");
-
-		
-		return $conn;
-
-	}
+	
 
 	function insert_jasaKirim(){
 		$conn = connectDB();
@@ -31,7 +24,7 @@
 			$_SESSION['status'] = "true";
 			echo ("<SCRIPT LANGUAGE='JavaScript'>
 		    window.alert('Jasa Kirim berhasil dibuat')
-		    window.location.href='admin.html';
+		    window.location.href='jasa_kirim.php';
 		    </SCRIPT>");
 			//header("Location: admin.html");
 		} else{
@@ -52,7 +45,6 @@
 	}
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -83,109 +75,9 @@
 
 <body>
 	<header id="header"><!--header-->
-		<div class="header_top"><!--header_top-->
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-6">
-						<div class="contactinfo">
-							<ul class="nav nav-pills">
-								<li><a href="#"><i class="fa fa-phone"></i> +62 21 12 34 56</a></li>
-								<li><a href="#"><i class="fa fa-envelope"></i> cs@tokokeren.com</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="col-sm-6">
-						<div class="social-icons pull-right">
-							<ul class="nav navbar-nav">
-								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-								
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><!--/header_top-->
-		
-		<div class="header-middle"><!--header-middle-->
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-4">
-						<div class="logo pull-left">
-							<a href=admin.html><img src="images/home/logo.png" alt="" /></a>
-						</div>
-						<div class="btn-group pull-right">
-							<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-									ID
-									<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="#">Indonesia</a></li>
-								</ul>
-							</div>
-							
-							<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-									IDR
-									<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="#">Rupiah</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-8">
-						<div class="shop-menu pull-right">
-							<ul class="nav navbar-nav">
-								<li><a href="#"><i class="fa fa-user"></i> Akun</a></li>
-								
-								<li><a href="index.html"><i class="fa fa-lock"></i> Logout</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><!--/header-middle-->
-	
-		<div class="header-bottom"><!--header-bottom-->
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-9">
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-								<span class="sr-only">Toggle navigation</span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-						</div>
-						<div class="mainmenu pull-left">
-							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="admin.html" class="active">Home</a></li>
-								<li class="dropdown"><a href="#">Produk<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="Kategori.html">Buat Kategori & Sub</a></li>
-										<li><a href="product_details.html">Buat Jasa Kirim</a></li>
-										<li><a href="promo_details.php">Buat Promo Produk</a></li>
-										<li><a href="admin_tambahproduk.html">Tambahkan Produk</a></li> 
-										<li><a href="index.html">Logout</a></li> 
-                                    </ul>
-                                </li> 
-								
-							
-							</ul>
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<div class="search_box pull-right">
-							<input type="text" placeholder="Cari"/>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><!--/header-bottom-->
+		<?php
+			cetakNavigasi();
+		?>
 	</header><!--/header-->
 			<div>
 			<div class="wrapper">

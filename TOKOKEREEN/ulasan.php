@@ -1,42 +1,39 @@
 <?php
-	
+
 	session_start();
-	if (!$_SESSION['flag']){
-		header("location:login.php");
-		die;
-	}
-
-	function connectDB(){
-		$user = "postgres";
-		$pass = "RIZKAHBIEBER22";
-
-		$conn = pg_connect("host=localhost dbname=rizkahshalihah user=postgres password=RIZKAHBIEBER22");
-
-		if (!$conn) {
-			die("Connection failed: " + pg_connection_status());
-		} else {
-			echo "connected";
-		}
-
-		return $conn;
-	}
+	
+	include 'invoice_post.php';
+	include 'navigasi.php';
 
 	function buat_ulasan(){
+		
 		$conn = connectDB();
 
-		$kode = $_POST['insert_kode'];
-		$rating = $_POST['insert_rating'];
+		$kode = $_SESSION['nomerProd'];
+		$rating = $_POST['options'];
 		$ulasan = $_POST['insert_ulasan'];
-		$sql = "INSERT INTO ulasan (email_pembeli, kode_produk, tanggal, rating, komentar) values ('$kode', curdate(),'$rating', '$ulasan')";
+		$mail = $_SESSION['email'];
+
+		$date_array = getdate();
+		   $formated_date  = $date_array['year'] . "-";
+		   $formated_date .= $date_array['mon'] . "-";
+		   $formated_date .= $date_array['mday'];
+
+		$sql = "INSERT INTO ulasan (email_pembeli, kode_produk, tanggal, rating, komentar) values ('$mail', '$kode', '$formated_date','$rating', '$ulasan')";
 
 		if ($result = pg_query($conn,$sql)){
-			echo "Jasa kirim berhasil dibuat";
-			header("Location: admin.html");
+			echo "Ulasan berhasil dibuat";
+			header("Location: index.php");
 		} else{
 			die("Error:$sql");
 		}
 
-		mysql_close($conn);
+		pg_close($conn);
+	}
+
+	if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+		buat_ulasan();
+		
 	}
 
 ?>
@@ -70,113 +67,9 @@
 
 <body>
 	<header id="header"><!--header-->
-		<div class="header_top"><!--header_top-->
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-6">
-						<div class="contactinfo">
-							<ul class="nav nav-pills">
-								<li><a href="#"><i class="fa fa-phone"></i> +62 21 12 34 56</a></li>
-								<li><a href="#"><i class="fa fa-envelope"></i> cs@tokokeren.com</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="col-sm-6">
-						<div class="social-icons pull-right">
-							<ul class="nav navbar-nav">
-								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-								<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-								<li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><!--/header_top-->
-		
-		<div class="header-middle"><!--header-middle-->
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-4">
-						<div class="logo pull-left">
-							<a href="pembeli.html"><img src="images/home/logo.png" alt="" /></a>
-						</div>
-						<div class="btn-group pull-right">
-							<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-									ID
-									<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="#">Indonesia</a></li>
-								</ul>
-							</div>
-							
-							<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-									IDR
-									<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="#">Rupiah</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-8">
-						<div class="shop-menu pull-right">
-							<ul class="nav navbar-nav">
-								<li><a href="profil.html"><i class="fa fa-user"></i> Profil</a></li>
-								<li><a href="invoice.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-								<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-								<li><a href="index.html"><i class="fa fa-lock"></i> Logout</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><!--/header-middle-->
-	
-		<div class="header-bottom"><!--header-bottom-->
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-9">
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-								<span class="sr-only">Toggle navigation</span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-						</div>
-						<div class="mainmenu pull-left">
-							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="pembeli.html" class="active">Home</a></li>
-								<li class="dropdown"><a href="#">Belanja<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="shop.html">Produk</a></li>
-										<li><a href="shippedprod.html">Detail Produk</a></li> 
-										<li><a href="invoice.html">Checkout</a></li> 
-										<li><a href="cart.html">Cart</a></li> 
-										<li><a href="index.html">Logout</a></li> 
-                                    </ul>
-                                </li> 
-								<li ><a href="promo.html">Promo<i class="active"></i></a></li> 
-								<li ><a href="pembeli_bukatoko.html">Membuka Toko<i class="active"></i></a></li> 
-							
-							</ul>
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<div class="search_box pull-right">
-							<input type="text" placeholder="Cari"/>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><!--/header-bottom-->
+		<?php
+			cetakNavigasi();
+		?>
 	</header><!--/header-->
 	
 		<header class="ccheader">
@@ -186,15 +79,20 @@
 			    <form method="post" action="" class="ccform">
 			    <h3> Kode Produk: </h3>
 				<div class="ccfield-prepend">
-			        <input class="ccformfield" type="text" name="insert_kode" placeholder="Kode Produk" required>
+			        <h2><?php echo $_SESSION['nomerProd'] ?></h2>
 			    </div>
 			    <h3> Rating : </h3>
-			    <div class="ccfield-prepend">
-			        <input class="ccformfield" type="text" name="insert_rating" placeholder="Berikan Rating 1-5" required>
-			    </div>
+			   	<select name="options" required>
+			   		<option value=""></option>
+				    <option value="1">1</option>
+				    <option value="2">2</option>
+				    <option value="3">3</option>
+				    <option value="4">4</option>
+				    <option value="5">5</option>
+				</select>
 			    <h3> Ulasan : </h3>
 			    <div class="ccfield-prepend">
-        			<textarea class="ccformfield" name="comments" rows="8" name="insert_ulasan" placeholder="Berikan Ulasan" required></textarea>
+        			<input type="text" class="ccformfield" name="insert_ulasan" placeholder="Berikan Ulasan" required="" oninvalid="this.setCustomValidity('Harap masukkan ulasan anda')"></input>
     			</div>
     			<br>
 				<div class="ccfield-prepend">

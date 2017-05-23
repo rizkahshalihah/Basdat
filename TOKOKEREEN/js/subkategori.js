@@ -1,4 +1,10 @@
+// if the var subCounter exists use that one, otherwise default to 1
+
 var counter = 1;
+if (parseInt(subCounter) > 1) {
+counter = parseInt(subCounter);
+}
+
 var limit = 10000;
 function addInput(divName){
      if (counter == limit)  {
@@ -6,21 +12,9 @@ function addInput(divName){
      }
      else {
           var newdiv = document.createElement('div');
-          newdiv.innerHTML = "<br> <h3>Subkategori : " + (counter + 1) + "</h3>" + " <br><input class='ccformfield' placeholder='Subkategori' type='text' name='myInputs[]'>" 
-          + " <h3>Kode Subkategori : " +"<br>" +  " <br><input class='ccformfield' placeholder='Kode Subkategori' type='text' name='myInputs[]'>"
-          + " <h3>Nama Subkategori : " +"<br>" +  " <br><input class='ccformfield' placeholder='Nama Subkategori' type='text' name='myInputs[]'>"+ "<br><br>";
+          newdiv.innerHTML = "<br> <h3>Subkategori : " + (counter + 1) + "</h3>" + " <br><input class='ccformfield' placeholder='Subkategori' type='text' name='sk_kode["+counter+"]'>"
+          + " <h3>Nama Subkategori : " +"<br>" +  " <br><input class='ccformfield' placeholder='Nama Subkategori' type='text' name='sk_nama["+counter+"]'>"+ "<br><br>";
           document.getElementById(divName).appendChild(newdiv);
           counter++;
      }
 }
-
-function addDropDown(){
-	alert("HM");
-	
-}
-
-
-
-
-	
-				
